@@ -3,7 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\UserRedirectionController;
+
 
 class RedirectIfAuthenticated
 {
@@ -18,9 +21,9 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+          $route = new UserRedirectionController(auth()->user());
+          return redirect()->route($route->get_route());
         }
-
         return $next($request);
     }
 }
